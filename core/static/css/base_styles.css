@@ -1,0 +1,194 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f2ee;
+    color: #333;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+}
+
+.overlay {
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #44444480;
+}
+
+.nav {
+    background-color: white;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.container {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: relative;
+    gap: 10px;
+}
+
+.sidebar {
+    width: 20%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+}
+
+.sidebar .sidebar_section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+}
+
+.sidebar .image {
+    width: 50%;
+    height: auto;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+}
+
+.hline {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+.sidebar .button {
+    width: 100%;
+    color: unset;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: start;
+    border: none;
+    background-color: unset;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.sidebar .button:hover {
+    background-color: #005792;
+    color: white;
+}
+
+.sidebar .button:is(:link, :visited) {
+    text-decoration: none;
+    width: 100%;
+    color: unset;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+.sidebar .button:hover {
+    background-color: #005792;
+    color: white;
+}
+
+.messages {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    width: 40%;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.message {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+}
+
+.message p {
+    flex-grow: 1;
+}
+
+.message .close {
+    cursor: pointer;
+    background-color: unset;
+    border: none;
+    font-size: 24px;
+    color: currentColor;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #1f7734;
+}
+
+.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #0c5460;
+}
+
+.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #856404;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #721c24;
+}
+
+.message .progress_container {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: translate(1%, 0);
+    width: 97%;
+    height: 2px;
+    border-radius: 10px;
+}
+
+.message .progress_container .progressbar {
+    background-color: currentColor;
+    height: 100%;
+    width: 100%;
+    transition: width 3s;
+}
+
+.hidden {
+    display: none;
+}

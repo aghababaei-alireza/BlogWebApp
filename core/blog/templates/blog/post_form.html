@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} {% if status == "craete" %} Create Post {% else %} Update Post {% endif %}{% endblock title %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static "blog/css/post_form.css" %}">
+{% endblock extra_css %}
+
+{% block script %}
+{% endblock script %}
+
+{% block content %}
+<h2>{% if status == "create" %} Create new Post {% else %} Update Post {% endif %}</h2>
+<form id="form" class="post_form" action="." method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form_section">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" value="{{ form.title.value|default:'' }}">
+        {% if form.title.errors %}
+            <ul class="field_error_list">
+                {% for error in form.title.errors %}
+                    <li class="field_error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form_section">
+        <label for="category_text">Category</label>
+        <input type="text" id="category_text" readonly onclick="toggle_dropdown()" value="{{ post_category|default:'---' }}">
+        <div class="dropdown hidden" id="category_dropdown">
+            <p class="dropdown_item" onclick="select_item(null, '---')">---</p>
+            {% for category in categories %}
+            <div class="form_section_h">
+                {{ category.color_badge }}
+                <p class="dropdown_item" onclick="select_item({{ category.id }}, '{{ category.name }}')">{{ category.name }}</p>
+            </div>
+            {% endfor %}
+            <input type="hidden" name="category" id="category" value="{{ form.category.value|default:'' }}">
+        </div>
+        {% if form.category.errors %}
+            <ul class="field_error_list">
+                {% for error in form.category.errors %}
+                    <li class="field_error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form_section">
+        <label for="content">Content</label>
+        <textarea name="content" id="content" rows="10">{{ form.content.value|default:'' }}</textarea>
+        {% if form.content.errors %}
+            <ul class="field_error_list">
+                {% for error in form.content.errors %}
+                    <li class="field_error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form_section">
+        <label for="delete_image">Image</label>
+        <img src="{% if form.instance.image %}{{ form.instance.image.url }}{% endif %}" alt="" id="image_preview">
+        <input type="file" id="image" accept="image/*" >
+        <input type="hidden" name="image_data" id="image_data">
+        {% if status == "update" %}
+        <div class="form_section_h">
+            <input type="checkbox" name="delete_image" id="delete_image">
+            <label for="delete_image">Clear current image</label>
+        </div>
+        {% endif %}
+        {% if form.delete_image.errors %}
+            <ul class="field_error_list">
+                {% for error in form.delete_image.errors %}
+                    <li class="field_error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <input class="btn" type="submit" value="{% if status == 'create' %}Publish{% else %}Update{% endif %}">
+    {% if form.non_field_errors %}
+            <ul class="field_error_list">
+                {% for error in form.non_field_errors %}
+                    <li class="field_error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+</form>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static "blog/js/post_form.js" %}"></script>
+{% endblock extra_js %}

@@ -1,0 +1,52 @@
+{% extends "account/base.html" %}
+{% load static %}
+
+{% block title %}Log In{% endblock title %}
+
+{% block script %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock script %}
+
+{% block content %}
+<form class="account_form" action="." method="post">
+    {% csrf_token %}
+    <h2>Log In</h2>
+    <div class="form_section">
+        <label for="email">Email or Username</label>
+        <input type="text" id="email" name="email" required>
+        {% if form.email.errors %}
+            <ul class="error_list">
+                {% for error in form.email.errors %}
+                    <li class="error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    <div class="form_section">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+        {% if form.password.errors %}
+            <ul class="error_list">
+                {% for error in form.password.errors %}
+                    <li class="error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+    {{ form.captcha }}
+    <div class="form_section">
+        <input type="submit" value="Log In">
+    </div>
+    <div class="form_section">
+        {% if form.non_field_errors %}
+            <ul class="error_list">
+                {% for error in form.non_field_errors %}
+                    <li class="error">{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+        <p style="font-size:14px;">Don't have an account? <a class="link" href="{% url "account:signup" %}">Sign Up</a></p>
+        <p style="font-size:14px;">forgot your password? <a class="link" href="{% url "account:password-reset" %}">Reset</a></p>
+</form>
+{% endblock content %}

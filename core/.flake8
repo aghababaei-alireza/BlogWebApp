@@ -1,0 +1,19 @@
+[flake8]
+max-line-length = 88
+
+exclude = 
+    .git,
+    .gitignore,
+    *.pot,
+    *.py[co],
+    __pycache__,
+    venv,
+    .env,
+    settings
+    */migrations/*
+    apps.py
+    __init__.py
+
+ignore = 
+    # Line too long
+    E501

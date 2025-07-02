@@ -1,0 +1,26 @@
+name: Django Project Test and Reformat
+
+on:
+    push:
+        branches: ["main"]
+    pull_request:
+        branches: ["main"]
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    name: Test
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+          
+        - name: Copy .env.sample
+          run: cp env/prod/.env.sample env/prod/.env
+
+        - name: Setup docker compose
+          run: docker compose -f docker-compose-prod.yml up -d
+
+        - name: Reformat and flake8 check
+          run: docker compose -f docker-compose-prod.yml exec backend sh -c "black --line-length 120 . && flake8 ."
+        
+          # TODO add tests

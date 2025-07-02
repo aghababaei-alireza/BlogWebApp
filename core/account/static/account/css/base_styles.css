@@ -1,0 +1,96 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f2ee;
+    color: #333;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+    padding: 40px;
+}
+
+.account_form {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    min-width: 30%;
+}
+
+.account_form .form_section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.account_form .form_section_h {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+}
+
+.account_form .form_section input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.account_form .form_section input:focus {
+    border-color: #005792;
+    outline: none;
+}
+
+.account_form .form_section input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #005792;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.error_list {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    list-style-type: none;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+}
+
+.link:is(:link, :visited) {
+    color: #005792;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.image {
+    width: 50%;
+    height: auto;
+}
