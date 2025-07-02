@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogosphere | {% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static "account/css/base_styles.css" %}">
+    {% block extra_css %}{% endblock extra_css %}
+    {% block script %}{% endblock script %}
+</head>
+<body>
+    <a class="logo" href="/">
+        <img src="{% static "img/Blogosphere.png" %}" alt="Blogosphere" width="400">
+    </a>
+    {% block content %}{% endblock content %}
+
+    {% block extra_js %}{% endblock extra_js %}
+</body>
+</html>

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Categories{% endblock title %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static "blog/css/categories.css" %}">
+{% endblock extra_css %}
+
+{% block script %}
+<script src="{% static "blog/js/category_scripts.js" %}"></script>
+{% endblock script %}
+
+{% block content %}
+<h2>Categories</h2>
+<br>
+<p>Total categories: {{ categories|length }}</p>
+<div class="tbl_container">
+    <table class="tbl">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th></th>
+                <th>Operations</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% comment %} {% if categories|length == 0 %}
+            <tr>
+                <td colspan="3" class="no_category">No categories have been created yet.</td>
+            </tr>
+            {% endif %} {% endcomment %}
+
+            {% for category in categories %}
+            <tr>
+                <td class="center_td">
+                    <p class="badge" style="background-color: {{ category.color }};">{{ category.name }}</p>
+                </td>
+                <td></td>
+                <td class="action_area">
+                    <button class="action_btn" type="button" style="background-image: url({% static "blog/img/edit.svg" %});" title="Edit" onclick="update_category('{% url 'category:update' pk=category.id %}', '{{ category.name }}', '{{ category.color }}')"></button>
+
+                    <button class="action_btn" type="button" style="background-image: url({% static "blog/img/delete.svg" %});" title="Delete" onclick="delete_category('{% url 'category:delete' pk=category.id %}')">
+                </td>
+            </tr>
+            {% endfor %}
+
+            <tr>
+                <td colspan="3" class="no_category"><button class="btn" style="width: fit-content;" type="button" onclick="add_category('{% url 'category:create' %}')">Add New Category</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<form class="modal hidden" method="post" id="category_form">
+    {% csrf_token %}
+    <div class="form_section">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name">
+    </div>
+    <div class="form_section">
+        <label for="color">Color</label>
+        <input type="color" id="color" name="color" style="height: 40px">
+    </div>
+    <input type="submit" value="Add" id="submit" class="btn">
+    <button class="close_btn" type="button" onclick="close_modal()">X</button>
+</form>
+
+<form method="post" id="delete_form" class="modal hidden">
+    {% csrf_token %}
+    <p>Are you sure you want to delete this category?</p>
+    <div class="form_section_h">
+        <input type="submit" value="Delete" class="btn" style="background-color: red;">
+        <button type="button" onclick="close_delete_modal()" class="btn">Cancel</button>
+    </div>
+</form>
+{% endblock content %}

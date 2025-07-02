@@ -1,0 +1,139 @@
+.main {
+    width: 80%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px 10px;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.tbl_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.tbl {
+    width: 50%;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+tr {
+    border-bottom: 1px solid #ccc;
+}
+
+th {
+    background-color: #77a8c9;
+    color: white;
+    padding: 5px;
+}
+
+td {
+    padding: 20px;
+}
+
+.center_td {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+td.no_category {
+    padding: 30px;
+}
+
+.badge {
+    padding: 5px 15px;
+    border-radius: 100px;
+    width: fit-content;
+}
+
+.action_area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.action_btn {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    background-size: cover;
+    background-color: transparent;
+    cursor: pointer;
+    color: #e582f2;
+}
+
+.modal {
+    z-index: 1000;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 20px 30px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.modal .form_section {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+
+.modal .form_section_h {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    width: 100%;
+}
+
+.modal .form_section input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.close_btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.btn {
+    width: 100%;
+    padding: 10px 10px;
+    text-align: center;
+    background-color: #005792;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}

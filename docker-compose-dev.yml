@@ -1,0 +1,54 @@
+services:
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+  backend:
+    depends_on:
+      - redis
+    build:
+      context: .
+      dockerfile: ./dockerfiles/dev/Dockerfile
+    container_name: backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./core:/usr/src/app
+    env_file:
+      - env/dev/.env
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    restart: unless-stopped
+
+  worker:
+    depends_on:
+      - redis
+      - backend
+    build:
+      context: .
+      dockerfile: ./dockerfiles/dev/Dockerfile
+    container_name: worker
+    volumes:
+      - ./core:/usr/src/app
+    env_file:
+      - env/dev/.env
+    command: sh -c "celery -A BlogSite worker --loglevel=info"
+    restart: unless-stopped
+
+  smtp4dev:
+    image: rnwood/smtp4dev:v3
+    restart: always
+    ports:
+      - '5000:80'
+      - '25:25'
+      - '143:143'
+    volumes:
+      - smtp4dev-data:/smtp4dev
+    environment:
+      - ServerOptions__Urls=http://*:80
+      - ServerOptions__HostName=smtp4dev
+
+volumes:
+  smtp4dev-data:

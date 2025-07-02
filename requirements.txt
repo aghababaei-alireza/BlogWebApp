@@ -1,0 +1,31 @@
+# Core dependencies for the project
+django
+python-decouple
+pillow
+django-recaptcha
+python-jose[cryptography]
+psycopg2-binary
+gunicorn
+
+# API
+djangorestframework
+markdown
+django-filter
+djangorestframework-simplejwt
+drf-recaptcha
+
+# Reformatting and testing tools
+black
+flake8
+pytest
+pytest-django
+faker
+
+# Documentation
+drf_yasg[validation]
+setuptools
+
+# Background process and caching
+celery[redis]
+redis
+django-redis
