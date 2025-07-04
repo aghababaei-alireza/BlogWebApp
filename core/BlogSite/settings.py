@@ -185,3 +185,12 @@ CELERY_TIMEZONE = "Asia/Tehran"
 CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="redis://redis:6379/0")
 CELERY_ACCEPT_CONTENT = config("CELERY_ACCEPT_CONTENT", default="json", cast=Csv(str))
 CELERY_TASK_SERIALIZER = config("CELERY_TASK_SERIALIZER", default="json")
+
+# Cache settings
+CACHES = {
+    "default": {
+        "BACKEND": config("CACHE_BACKEND", default="django.core.cache.backends.redis.RedisCache"),
+        "LOCATION": config("CACHE_LOCATION", default="redis://redis:6379/1"),
+        "TIMEOUT": config("CACHE_TIMEOUT", default=60 * 15, cast=int),  # 15 minutes
+    }
+}

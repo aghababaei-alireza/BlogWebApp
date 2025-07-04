@@ -1,8 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
-from blog.models import Category, Post
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from blog.models import Category, Post
 from .serializers import CategorySerializer, PostSerializer
 from .permissions import IsVerifiedOrReadOnly, IsAuthorOrReadOnly, IsSuperuserOrReadOnly
 from .paginations import PostPagination
@@ -20,6 +22,14 @@ class CategoryViewSet(ModelViewSet):
         IsSuperuserOrReadOnly,
         IsVerifiedOrReadOnly,
     ]
+
+    @method_decorator(cache_page(60 * 15))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(60 * 15))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
 
 class PostViewSet(ModelViewSet):
@@ -39,3 +49,11 @@ class PostViewSet(ModelViewSet):
     filterset_fields = ["category", "author"]
     search_fields = ["title", "content"]
     ordering_fields = ["created_at", "updated_at"]
+
+    @method_decorator(cache_page(60 * 5))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @method_decorator(cache_page(60 * 5))
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
