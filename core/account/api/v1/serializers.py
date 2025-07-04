@@ -32,9 +32,7 @@ class SignupSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs["password"] != attrs.pop("password_confirm"):
-            raise serializers.ValidationError(
-                {"password": "Password and confirmation do not match."}
-            )
+            raise serializers.ValidationError({"password": "Password and confirmation do not match."})
 
         try:
             validate_password(attrs["password"])
@@ -75,7 +73,7 @@ class VerificationResendSerializer(serializers.Serializer):
             return attrs
 
         if user.is_verified:
-            raise serializers.ValidationError("This account is already verified.")
+            raise serializers.ValidationError("User is already verified.")
 
         attrs["user"] = user
         return attrs
@@ -84,9 +82,7 @@ class VerificationResendSerializer(serializers.Serializer):
 class PasswordChangeSerializer(serializers.Serializer):
     old_password = serializers.CharField(write_only=True, required=True, label="Old Password")
     new_password = serializers.CharField(write_only=True, required=True, label="New Password")
-    new_password_confirm = serializers.CharField(
-        write_only=True, required=True, label="Confirm New Password"
-    )
+    new_password_confirm = serializers.CharField(write_only=True, required=True, label="Confirm New Password")
 
     def validate(self, attrs):
         old_password = attrs.get("old_password")
@@ -94,9 +90,7 @@ class PasswordChangeSerializer(serializers.Serializer):
         new_password_confirm = attrs.get("new_password_confirm")
 
         if new_password != new_password_confirm:
-            raise serializers.ValidationError(
-                {"new_password": "New password and confirmation do not match."}
-            )
+            raise serializers.ValidationError({"new_password": "New password and confirmation do not match."})
 
         user: User = self.context["request"].user
         if not user.check_password(old_password):
@@ -130,18 +124,14 @@ class PasswordResetSerializer(serializers.Serializer):
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
     new_password = serializers.CharField(write_only=True, required=True, label="New Password")
-    new_password_confirm = serializers.CharField(
-        write_only=True, required=True, label="Confirm New Password"
-    )
+    new_password_confirm = serializers.CharField(write_only=True, required=True, label="Confirm New Password")
 
     def validate(self, attrs):
         new_password = attrs.get("new_password")
         new_password_confirm = attrs.get("new_password_confirm")
 
         if new_password != new_password_confirm:
-            raise serializers.ValidationError(
-                {"new_password": "New password and confirmation do not match."}
-            )
+            raise serializers.ValidationError({"new_password": "New password and confirmation do not match."})
 
         try:
             validate_password(new_password)

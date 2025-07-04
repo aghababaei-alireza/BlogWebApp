@@ -2,6 +2,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.serializers import ValidationError
 from django.contrib.sites.shortcuts import get_current_site
 from rest_framework.settings import api_settings
 from .serializers import (
@@ -107,7 +108,13 @@ class VerificationResendAPIView(GenericAPIView):
         Handle POST request for resending verification email.
         """
         serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except ValidationError:
+            return Response(
+                MessageSerializer({"detail": "User is already verified."}).data,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         user = serializer.validated_data.get("user", None)
         if not user:
             return Response(
@@ -209,11 +216,11 @@ class PasswordResetAPIView(GenericAPIView):
         """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data["user"]
+        user = serializer.validated_data.get("user", None)
 
         if not user:
             return Response(
-                MessageSerializer({"detail": "Password reset Email sent."}).data,
+                MessageSerializer({"detail": "Password reset email sent."}).data,
                 status=status.HTTP_200_OK,
             )
 
@@ -253,7 +260,13 @@ class PasswordResetConfirmAPIView(GenericAPIView):
         """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = VerifyToken.validate(token)
+        try:
+            user = VerifyToken.validate(token)
+        except ValueError as e:
+            return Response(
+                MessageSerializer({"detail": str(e)}).data,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         if not user:
             return Response(
                 MessageSerializer({"detail": "Invalid token."}).data,

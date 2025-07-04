@@ -101,20 +101,13 @@ class PostCreateView(LoginRequiredMixin, VerifiedUserRequiredMixin, CreateView):
 
 class PostListView(ListView):
     model = Post
-    queryset = (
-        Post.objects.select_related("author")
-        .select_related("category")
-        .prefetch_related("comments")
-        .all()
-    )
+    queryset = Post.objects.select_related("author").select_related("category").prefetch_related("comments").all()
     context_object_name = "posts"
     template_name = "blog/posts.html"
     paginate_by = 10
 
 
-class PostUpdateView(
-    LoginRequiredMixin, VerifiedUserRequiredMixin, PostOwnerRequiredMixin, UpdateView
-):
+class PostUpdateView(LoginRequiredMixin, VerifiedUserRequiredMixin, PostOwnerRequiredMixin, UpdateView):
     model = Post
     form_class = PostForm
     success_url = reverse_lazy("post:list")
@@ -139,9 +132,7 @@ class PostUpdateView(
         return redirect("post:list")
 
 
-class PostDeleteView(
-    LoginRequiredMixin, VerifiedUserRequiredMixin, PostOwnerRequiredMixin, DeleteView
-):
+class PostDeleteView(LoginRequiredMixin, VerifiedUserRequiredMixin, PostOwnerRequiredMixin, DeleteView):
     model = Post
     success_url = reverse_lazy("post:list")
     template_name = "blog/posts.html"
@@ -160,9 +151,4 @@ class PostDetailView(DetailView):
     template_name = "blog/post_detail.html"
 
     def get_queryset(self):
-        return (
-            self.model.objects.select_related("category")
-            .select_related("author")
-            .prefetch_related("comments")
-            .all()
-        )
+        return self.model.objects.select_related("category").select_related("author").prefetch_related("comments").all()

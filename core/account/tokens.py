@@ -64,9 +64,7 @@ class VerifyToken:
             raise ValueError("User ID not found in token")
 
         exp = payload.get("exp")
-        if exp and (
-            datetime.fromtimestamp(exp, tz=timezone.get_current_timezone()) < timezone.now()
-        ):
+        if exp and (datetime.fromtimestamp(exp, tz=timezone.get_current_timezone()) < timezone.now()):
             raise ValueError("Token has expired")
 
         try:

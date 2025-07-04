@@ -48,9 +48,7 @@ class CommentCreateView(LoginRequiredMixin, VerifiedUserRequiredMixin, CreateVie
         return super().form_valid(form)
 
 
-class CommentUpdateView(
-    LoginRequiredMixin, VerifiedUserRequiredMixin, CommentOwnerRequiredMixin, UpdateView
-):
+class CommentUpdateView(LoginRequiredMixin, VerifiedUserRequiredMixin, CommentOwnerRequiredMixin, UpdateView):
     model = Comment
     form_class = CommentForm
     template_name = "blog/post_detail.html"
@@ -75,9 +73,7 @@ class CommentUpdateView(
         return redirect("post:list")
 
 
-class CommentDeleteView(
-    LoginRequiredMixin, VerifiedUserRequiredMixin, CommentOwnerRequiredMixin, DeleteView
-):
+class CommentDeleteView(LoginRequiredMixin, VerifiedUserRequiredMixin, CommentOwnerRequiredMixin, DeleteView):
     model = Comment
     template_name = "blog/post_detail.htm"
 
