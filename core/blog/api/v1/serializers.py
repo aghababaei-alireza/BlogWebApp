@@ -22,6 +22,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     relative_url = serializers.SerializerMethodField(method_name="get_relative_url")
     absolute_url = serializers.SerializerMethodField(method_name="get_absolute_url")
+    comments_count = serializers.IntegerField(source="comments.count", read_only=True)
 
     def get_relative_url(self, obj):
         return reverse("post:api-v1:posts-detail", kwargs={"pk": obj.pk})
@@ -44,8 +45,9 @@ class PostSerializer(serializers.ModelSerializer):
             "updated_at",
             "relative_url",
             "absolute_url",
+            "comments_count",
         ]
-        read_only_fields = ["id", "author", "created_at", "updated_at", "published"]
+        read_only_fields = ["id", "author", "created_at", "updated_at", "published", "comments_count"]
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)

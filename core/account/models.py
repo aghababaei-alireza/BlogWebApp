@@ -64,9 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name="Username",
         help_text="Username must be unique and is used to show to other users.",
     )
-    image = models.ImageField(
-        upload_to="users", null=True, blank=True, verbose_name="Profile Image"
-    )
+    image = models.ImageField(upload_to="users", null=True, blank=True, verbose_name="Profile Image")
     is_active = models.BooleanField(default=True, verbose_name="Is Active")
     is_staff = models.BooleanField(default=False, verbose_name="Is Staff")
     is_verified = models.BooleanField(default=False, verbose_name="Is Verified")

@@ -39,9 +39,7 @@ class CustomSignupForm(CaptchaForm, forms.Form):
 
     email = forms.EmailField(label="Email", required=True)
     password = forms.CharField(label="Password", required=True, widget=forms.PasswordInput)
-    confirm_password = forms.CharField(
-        label="Confirm Password", required=True, widget=forms.PasswordInput
-    )
+    confirm_password = forms.CharField(label="Confirm Password", required=True, widget=forms.PasswordInput)
     username = forms.CharField(label="Username", required=True)
 
     def clean(self):

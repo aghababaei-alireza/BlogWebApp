@@ -13,6 +13,7 @@ markdown
 django-filter
 djangorestframework-simplejwt
 drf-recaptcha
+drf-nested-routers
 
 # Reformatting and testing tools
 black
