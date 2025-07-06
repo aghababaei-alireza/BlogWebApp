@@ -9,6 +9,7 @@ from .views import (
     CustomPasswordResetView,
     CustomPasswordResetConfirmView,
     UserInfoEditView,
+    CaptchaView,
 )
 
 app_name = "account"
@@ -35,4 +36,6 @@ urlpatterns = [
     ),
     # API
     path("api/v1/", include("account.api.v1.urls")),
+    # Captcha
+    path("captcha/", CaptchaView.as_view(), name="get-captcha"),
 ]

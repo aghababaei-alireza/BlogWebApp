@@ -4,6 +4,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 import uuid
 from django.utils.text import slugify
+from captcha.validators import captcha_validate
 from account.models import User
 
 
@@ -24,13 +25,24 @@ class UserWithTokenSerializer(serializers.ModelSerializer):
 
 class SignupSerializer(serializers.ModelSerializer):
     password_confirm = serializers.CharField(write_only=True, label="Password Confirmation")
+    captcha_code = serializers.CharField(max_length=32, write_only=True, required=True)
+    captcha_hashkey = serializers.CharField(
+        max_length=40,
+        write_only=True,
+        required=True,
+        help_text='Visit <a href="/account/captcha/" target="blank">this link</a> to get the captcha image and also copy the hashkey.',
+    )
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "password", "password_confirm"]
+        fields = ["id", "username", "email", "password", "password_confirm", "captcha_code", "captcha_hashkey"]
         read_only_fields = ["id"]
 
     def validate(self, attrs):
+        captcha_validate(attrs["captcha_hashkey"], attrs["captcha_code"])
+        attrs.pop("captcha_hashkey", None)
+        attrs.pop("captcha_code", None)
+
         if attrs["password"] != attrs.pop("password_confirm"):
             raise serializers.ValidationError({"password": "Password and confirmation do not match."})
 

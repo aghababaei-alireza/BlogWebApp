@@ -14,6 +14,7 @@ django-filter
 djangorestframework-simplejwt
 drf-recaptcha
 drf-nested-routers
+django-simple-captcha
 
 # Reformatting and testing tools
 black
