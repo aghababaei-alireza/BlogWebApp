@@ -1,11 +1,12 @@
 from django.urls import reverse_lazy, reverse
-from django.views.generic import FormView, RedirectView, UpdateView
+from django.views.generic import FormView, RedirectView, UpdateView, TemplateView
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordResetView
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
+from captcha.models import CaptchaStore
 from .forms import (
     CustomSignupForm,
     CustomLoginForm,
@@ -159,3 +160,13 @@ class UserInfoEditView(LoginRequiredMixin, VerifiedUserRequiredMixin, UpdateView
 
     def get_object(self):
         return self.request.user
+
+
+class CaptchaView(TemplateView):
+    template_name = "account/captcha.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        key = CaptchaStore.generate_key()
+        context["key"] = key
+        return context

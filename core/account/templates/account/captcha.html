@@ -1,0 +1,15 @@
+{% extends "account/base.html" %}
+{% load static %}
+
+{% block title %}Captcha{% endblock title %}
+
+{% block content %}
+<div class="account_form">
+    <img src="/captcha/image/{{ key }}@2" alt="Captcha Image">
+    <div class="form_section">
+        <label for="key">Hashkey</label>
+        <input id="key" type="text" value="{{ key }}">
+        <input type="submit" value="Copy Hashkey" onclick="navigator.clipboard.writeText(document.getElementById('key').value); alert('Copied.');">
+    </div>
+</div>
+{% endblock content %}

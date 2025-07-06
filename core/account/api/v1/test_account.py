@@ -4,6 +4,8 @@ from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.tokens import RefreshToken
+from captcha.models import CaptchaStore
+from captcha.conf import settings as captcha_settings
 from account.models import User
 from account.tokens import VerifyToken
 
@@ -11,6 +13,12 @@ from account.tokens import VerifyToken
 @pytest.fixture
 def api_client() -> APIClient:
     return APIClient()
+
+
+@pytest.fixture
+def captcha() -> CaptchaStore:
+    challenge, response = captcha_settings.get_challenge()()
+    return CaptchaStore.objects.create(challenge=challenge, response=response)
 
 
 @pytest.fixture
@@ -35,13 +43,15 @@ def unverified_user() -> User:
 
 @pytest.mark.django_db
 class TestAccountAPI:
-    def test_account_signup(self, api_client: APIClient) -> None:
+    def test_account_signup(self, api_client: APIClient, captcha: CaptchaStore) -> None:
         url = reverse("account:api-v1:token-signup")
         data = {
             "username": "testuser",
             "email": "testuser@example.com",
             "password": "testpassword",
             "password_confirm": "testpassword",
+            "captcha_code": captcha.response,
+            "captcha_hashkey": captcha.hashkey,
         }
         response = api_client.post(url, data)
 
