@@ -17,7 +17,8 @@ from .serializers import (
     ProfileSerializer,
 )
 from .permissions import IsVerified, IsVerifiedOrReadOnly
-from account.tokens import VerifyToken
+
+from jwt_token.models import Token
 from account.tasks import send_email
 
 
@@ -43,7 +44,7 @@ class SignupAPIView(GenericAPIView):
         current_site = get_current_site(request)
         domain = current_site.domain
         protocol = "https" if request.is_secure() else "http"
-        token = VerifyToken(user).get()
+        token = Token.make_token(user)
 
         send_email.delay(
             email=user.email,
@@ -126,7 +127,7 @@ class VerificationResendAPIView(GenericAPIView):
             current_site = get_current_site(request)
             domain = current_site.domain
             protocol = "https" if request.is_secure() else "http"
-            token = VerifyToken(user).get()
+            token = Token.make_token(user)
 
             send_email.delay(
                 email=user.email,
@@ -160,7 +161,7 @@ class VerificationConfirmAPIView(APIView):
         Handle GET request for confirming user verification.
         """
         try:
-            user = VerifyToken.validate(token)
+            user = Token.validate(token)
             if user.is_verified:
                 return Response(
                     MessageSerializer({"detail": "User is already verified."}).data,
@@ -228,7 +229,7 @@ class PasswordResetAPIView(GenericAPIView):
         current_site = get_current_site(request)
         domain = current_site.domain
         protocol = "https" if request.is_secure() else "http"
-        token = VerifyToken(user).get()
+        token = Token.make_token(user)
 
         send_email.delay(
             email=user.email,
@@ -262,7 +263,7 @@ class PasswordResetConfirmAPIView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
-            user = VerifyToken.validate(token)
+            user = Token.validate(token)
         except ValueError as e:
             return Response(
                 MessageSerializer({"detail": str(e)}).data,

@@ -7,7 +7,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from captcha.models import CaptchaStore
 from captcha.conf import settings as captcha_settings
 from account.models import User
-from account.tokens import VerifyToken
+
+from jwt_token.models import Token as JWTTOKEN
 
 
 @pytest.fixture
@@ -185,7 +186,7 @@ class TestAccountAPI:
         assert response.data["detail"] == "User is already verified."
 
     def test_account_verify_confirm(self, api_client: APIClient, unverified_user: User) -> None:
-        url = reverse("account:api-v1:verify-confirm", kwargs={"token": VerifyToken(unverified_user).get()})
+        url = reverse("account:api-v1:verify-confirm", kwargs={"token": JWTTOKEN.make_token(unverified_user)})
         response = api_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
@@ -335,7 +336,7 @@ class TestAccountAPI:
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_account_password_reset_confirm(self, api_client: APIClient, user: User):
-        token = VerifyToken(user).get()
+        token = JWTTOKEN.make_token(user)
         url = reverse("account:api-v1:password-reset-confirm", kwargs={"token": token})
         data = {
             "new_password": "newpassword123",

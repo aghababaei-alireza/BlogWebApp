@@ -14,7 +14,8 @@ from .forms import (
     CustomPasswordResetForm,
     UserInfoForm,
 )
-from .tokens import VerifyToken
+
+from jwt_token.models import Token
 from .models import User
 from .mixins import VerifiedUserRequiredMixin
 from .tasks import send_email
@@ -40,7 +41,7 @@ class VerificationResendView(LoginRequiredMixin, RedirectView):
         current_site = get_current_site(request)
         domain = current_site.domain
         protocol = "https" if request.is_secure() else "http"
-        token = VerifyToken(request.user).get()
+        token = Token.make_token(request.user)
 
         send_email.delay(
             email=request.user.email,
@@ -68,7 +69,7 @@ class VerificationConfirmView(RedirectView):
     def get(self, request, *args, **kwargs):
         token = kwargs.get("token", None)
         try:
-            user = VerifyToken.validate(token)
+            user = Token.validate(token)
             user.is_verified = True
             user.save()
             messages.success(self.request, "Your email has been verified successfully.")
@@ -111,7 +112,7 @@ class CustomPasswordResetView(PasswordResetView):
     subject_template_name = "account/email/password_reset_email_subject.txt"
     template_name = "account/password_reset.html"
     success_url = reverse_lazy("index")
-    token_generator = VerifyToken
+    token_generator = Token
 
     def form_valid(self, form):
         messages.success(
@@ -138,7 +139,7 @@ class CustomPasswordResetConfirmView(FormView):
 
     def get_user(self, token: str) -> User:
         try:
-            user = VerifyToken.validate(token)
+            user = Token.validate(token, deactivate=self.request.method == "POST")
         except ValueError as e:
             messages.error(self.request, str(e))
             user = None

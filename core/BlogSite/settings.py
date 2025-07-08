@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from decouple import config, Csv
+from celery.beat import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     "account",
     "blog",
     "comment",
+    "jwt_token",
     # Third party apps
     "django_recaptcha",
     "rest_framework",
@@ -125,7 +127,7 @@ TIME_ZONE = "Asia/Tehran"
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -186,6 +188,14 @@ CELERY_TIMEZONE = "Asia/Tehran"
 CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="redis://redis:6379/0")
 CELERY_ACCEPT_CONTENT = config("CELERY_ACCEPT_CONTENT", default="json", cast=Csv(str))
 CELERY_TASK_SERIALIZER = config("CELERY_TASK_SERIALIZER", default="json")
+
+# Celery Beat Settings
+CELERY_BEAT_SCHEDULE = {
+    "remove_inactive_tokens": {
+        "task": "jwt_token.tasks.remove_inactive_tokens",
+        "schedule": crontab(hour=23, minute=0),
+    },
+}
 
 # Cache settings
 CACHES = {
