@@ -37,6 +37,21 @@ services:
     command: sh -c "celery -A BlogSite worker --loglevel=info"
     restart: unless-stopped
 
+  beat:
+    depends_on:
+      - redis
+      - backend
+    build:
+      context: .
+      dockerfile: ./dockerfiles/dev/Dockerfile
+    container_name: beat
+    volumes:
+      - ./core:/usr/src/app
+    env_file:
+      - env/dev/.env
+    command: sh -c "celery -A BlogSite beat --loglevel=info"
+    restart: unless-stopped
+
   smtp4dev:
     image: rnwood/smtp4dev:v3
     restart: always
