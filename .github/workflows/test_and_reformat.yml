@@ -26,6 +26,8 @@ jobs:
   Test:
     runs-on: ubuntu-latest
     name: Test
+    needs: Reformat
+    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     steps:
         - name: Checkout code
           uses: actions/checkout@v4
