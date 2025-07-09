@@ -8,7 +8,7 @@ from captcha.models import CaptchaStore
 from captcha.conf import settings as captcha_settings
 from account.models import User
 
-from jwt_token.models import Token as JWTTOKEN
+# from jwt_token.models import Token as JWTTOKEN
 
 
 @pytest.fixture
