@@ -112,12 +112,16 @@ class CustomLoginForm(CaptchaForm, forms.Form):
         #         code="captcha_invalid",
         #     )
         if not email or not password:
-            raise forms.ValidationError("Please enter a correct email and password. Note that both fields may be case-sensitive.")
+            raise forms.ValidationError(
+                "Please enter a correct email and password. Note that both fields may be case-sensitive."
+            )
 
         self.user_cache = authenticate(self.request, email=email, password=password)
 
         if self.user_cache is None:
-            raise forms.ValidationError("Please enter a correct email and password. Note that both fields may be case-sensitive.")
+            raise forms.ValidationError(
+                "Please enter a correct email and password. Note that both fields may be case-sensitive."
+            )
 
         if not self.user_cache.is_active:
             raise forms.ValidationError("This account is inactive.")
