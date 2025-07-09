@@ -46,8 +46,8 @@ class CustomSignupForm(CaptchaForm, forms.Form):
         """
         Custom clean method to validate the form data.
         """
-        super(CaptchaForm, self).clean()
-        cleaned_data = super(forms.Form, self).clean()
+        cleaned_data = super().clean()
+        # cleaned_data = super(forms.Form, self).clean()
         email = cleaned_data.get("email")
         password = cleaned_data.get("password")
         confirm_password = cleaned_data.get("confirm_password")
@@ -99,8 +99,8 @@ class CustomLoginForm(CaptchaForm, forms.Form):
         super(forms.Form, self).__init__(*args, **kwargs)
 
     def clean(self):
-        super(CaptchaForm, self).clean()
-        self.cleaned_data = super(forms.Form, self).clean()
+        self.cleaned_data = super().clean()
+        # self.cleaned_data = super(forms.Form, self).clean()
 
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
@@ -112,16 +112,12 @@ class CustomLoginForm(CaptchaForm, forms.Form):
         #         code="captcha_invalid",
         #     )
         if not email or not password:
-            raise forms.ValidationError(
-                "Please enter a correct email and password. Note that both fields may be case-sensitive."
-            )
+            raise forms.ValidationError("Please enter a correct email and password. Note that both fields may be case-sensitive.")
 
         self.user_cache = authenticate(self.request, email=email, password=password)
 
         if self.user_cache is None:
-            raise forms.ValidationError(
-                "Please enter a correct email and password. Note that both fields may be case-sensitive."
-            )
+            raise forms.ValidationError("Please enter a correct email and password. Note that both fields may be case-sensitive.")
 
         if not self.user_cache.is_active:
             raise forms.ValidationError("This account is inactive.")

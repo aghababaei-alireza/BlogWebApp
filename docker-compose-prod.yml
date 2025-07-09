@@ -54,18 +54,21 @@ services:
     command: sh -c "celery -A BlogSite worker --loglevel=info"
     restart: unless-stopped
 
-  smtp4dev:
-    image: rnwood/smtp4dev:v3
-    restart: always
-    ports:
-      - '5000:80'
-      - '25:25'
-      - '143:143'
+  beat:
+    depends_on:
+      - redis
+      - postgres_db
+      - backend
+    build:
+      context: .
+      dockerfile: ./dockerfiles/dev/Dockerfile
+    container_name: beat
     volumes:
-      - smtp4dev-data:/smtp4dev
-    environment:
-      - ServerOptions__Urls=http://*:80
-      - ServerOptions__HostName=smtp4dev
+      - ./core:/usr/src/app
+    env_file:
+      - env/dev/.env
+    command: sh -c "celery -A BlogSite beat --loglevel=info"
+    restart: unless-stopped
 
   nginx:
     image: nginx
@@ -82,7 +85,6 @@ services:
       - redis
 
 volumes:
-  smtp4dev-data:
   postgres_data:
   static_volume:
   media_volume:
