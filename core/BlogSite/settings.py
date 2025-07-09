@@ -52,11 +52,13 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "django_filters",
     "captcha",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -186,7 +188,7 @@ REST_FRAMEWORK = {
 # Celery settings
 CELERY_TIMEZONE = "Asia/Tehran"
 CELERY_BROKER_URL = config("CELERY_BROKER_URL", default="redis://redis:6379/0")
-CELERY_ACCEPT_CONTENT = config("CELERY_ACCEPT_CONTENT", default="json", cast=Csv(str))
+CELERY_ACCEPT_CONTENT = config("CELERY_ACCEPT_CONTENT", default="json", cast=Csv())
 CELERY_TASK_SERIALIZER = config("CELERY_TASK_SERIALIZER", default="json")
 
 # Celery Beat Settings
@@ -205,3 +207,8 @@ CACHES = {
         "TIMEOUT": config("CACHE_TIMEOUT", default=60 * 15, cast=int),  # 15 minutes
     }
 }
+
+# Cors Headers
+CORS_ALLOW_ALL_ORIGINS = config("CORS_ALLOW_ALL_ORIGINS", default=True, cast=bool)
+if not CORS_ALLOW_ALL_ORIGINS:
+    CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="127.0.0.1:8000,localhost:8000", cast=Csv())
