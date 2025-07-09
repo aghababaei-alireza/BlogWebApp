@@ -13,30 +13,25 @@ jobs:
     steps:
         - name: Checkout code
           uses: actions/checkout@v4
-          
-        - name: Copy .env.sample
-          run: cp env/dev/.env.sample env/dev/.env
+
+        - name: Prepare environment file
+          run: |
+            mkdir -p env/prod
+            cp env/prod/.env.sample env/prod/.env
+            echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> env/prod/.env
+            echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> env/prod/.env
+            echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> env/prod/.env
+            echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> env/prod/.env
+            echo "SQL_DATABASE=${{ secrets.SQL_DATABASE }}" >> env/prod/.env
+            echo "SQL_HOST=${{ secrets.SQL_HOST }}" >> env/prod/.env
+            echo "SQL_PASSWORD=${{ secrets.SQL_PASSWORD }}" >> env/prod/.env
+            echo "SQL_USER=${{ secrets.SQL_USER }}" >> env/prod/.env
 
         - name: Setup docker compose
-          run: docker compose -f docker-compose-dev.yml up -d
+          run: docker compose -f docker-compose-prod.yml up -d
 
         - name: Reformat and flake8 check
-          run: docker compose -f docker-compose-dev.yml exec backend sh -c "black --line-length 120 . && flake8 ."
+          run: docker compose -f docker-compose-prod.yml exec backend sh -c "black --line-length 120 . && flake8 ."
 
-  Test:
-    runs-on: ubuntu-latest
-    name: Test
-    needs: Reformat
-    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
-    steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
-          
-        - name: Copy .env.sample
-          run: cp env/dev/.env.sample env/dev/.env
-
-        - name: Setup docker compose
-          run: docker compose -f docker-compose-dev.yml up -d
-        
         - name: Run tests
-          run: docker compose -f docker-compose-dev.yml exec backend sh -c "pytest ."        
+          run: docker compose -f docker-compose-prod.yml exec backend sh -c "pytest ."
