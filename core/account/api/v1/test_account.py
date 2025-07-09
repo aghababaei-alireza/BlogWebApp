@@ -8,7 +8,7 @@ from captcha.models import CaptchaStore
 from captcha.conf import settings as captcha_settings
 from account.models import User
 
-# from jwt_token.models import Token as JWTTOKEN
+from jwt_token.models import Token as JWTTOKEN
 
 
 @pytest.fixture
@@ -44,22 +44,22 @@ def unverified_user() -> User:
 
 @pytest.mark.django_db
 class TestAccountAPI:
-    # def test_account_signup(self, api_client: APIClient, captcha: CaptchaStore) -> None:
-    #     url = reverse("account:api-v1:token-signup")
-    #     data = {
-    #         "username": "testuser",
-    #         "email": "testuser@example.com",
-    #         "password": "testpassword",
-    #         "password_confirm": "testpassword",
-    #         "captcha_code": captcha.response,
-    #         "captcha_hashkey": captcha.hashkey,
-    #     }
-    #     response = api_client.post(url, data)
+    def test_account_signup(self, api_client: APIClient, captcha: CaptchaStore) -> None:
+        url = reverse("account:api-v1:token-signup")
+        data = {
+            "username": "testuser",
+            "email": "testuser@example.com",
+            "password": "testpassword",
+            "password_confirm": "testpassword",
+            "captcha_code": captcha.response,
+            "captcha_hashkey": captcha.hashkey,
+        }
+        response = api_client.post(url, data)
 
-    #     assert response.status_code == status.HTTP_201_CREATED
-    #     assert ["id", "email", "username", "token"] == list(response.data.keys())
-    #     assert response.data["email"] == "testuser@example.com"
-    #     assert response.data["username"] == "testuser"
+        assert response.status_code == status.HTTP_201_CREATED
+        assert ["id", "email", "username", "token"] == list(response.data.keys())
+        assert response.data["email"] == "testuser@example.com"
+        assert response.data["username"] == "testuser"
 
     def test_account_login_with_username(self, api_client: APIClient, user: User) -> None:
         url = reverse("account:api-v1:token-login")
@@ -164,15 +164,15 @@ class TestAccountAPI:
         assert response.data["detail"] == "Token is invalid"
         assert response.data["code"] == "token_not_valid"
 
-    # def test_account_verify_resend(self, api_client: APIClient, unverified_user: User) -> None:
-    #     url = reverse("account:api-v1:verify-resend")
-    #     data = {
-    #         "email": unverified_user.email,
-    #     }
-    #     response = api_client.post(url, data)
+    def test_account_verify_resend(self, api_client: APIClient, unverified_user: User) -> None:
+        url = reverse("account:api-v1:verify-resend")
+        data = {
+            "email": unverified_user.email,
+        }
+        response = api_client.post(url, data)
 
-    #     assert response.status_code == status.HTTP_200_OK
-    #     assert response.data["detail"] == "Verification email sent."
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["detail"] == "Verification email sent."
 
     def test_account_verify_resend_with_verified_user(self, api_client: APIClient, user: User) -> None:
         url = reverse("account:api-v1:verify-resend")
@@ -185,13 +185,13 @@ class TestAccountAPI:
         print(response.data)
         assert response.data["detail"] == "User is already verified."
 
-    # def test_account_verify_confirm(self, api_client: APIClient, unverified_user: User) -> None:
-    #     url = reverse("account:api-v1:verify-confirm", kwargs={"token": JWTTOKEN.make_token(unverified_user)})
-    #     response = api_client.get(url)
+    def test_account_verify_confirm(self, api_client: APIClient, unverified_user: User) -> None:
+        url = reverse("account:api-v1:verify-confirm", kwargs={"token": JWTTOKEN.make_token(unverified_user)})
+        response = api_client.get(url)
 
-    #     assert response.status_code == status.HTTP_200_OK
-    #     assert response.data["detail"] == "User verified successfully."
-    #     assert User.objects.get(id=unverified_user.id).is_verified is True
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["detail"] == "User verified successfully."
+        assert User.objects.get(id=unverified_user.id).is_verified is True
 
     def test_account_verify_confirm_with_invalid_token(self, api_client: APIClient) -> None:
         url = reverse("account:api-v1:verify-confirm", kwargs={"token": "invalidtoken"})
@@ -306,15 +306,15 @@ class TestAccountAPI:
 
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    # def test_account_password_reset(self, api_client: APIClient, user: User):
-    #     url = reverse("account:api-v1:password-reset")
-    #     data = {
-    #         "email": user.email,
-    #     }
-    #     response = api_client.post(url, data)
+    def test_account_password_reset(self, api_client: APIClient, user: User):
+        url = reverse("account:api-v1:password-reset")
+        data = {
+            "email": user.email,
+        }
+        response = api_client.post(url, data)
 
-    #     assert response.status_code == status.HTTP_200_OK
-    #     assert response.data["detail"] == "Password reset email sent."
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["detail"] == "Password reset email sent."
 
     def test_account_password_reset_with_wrong_email(self, api_client: APIClient):
         url = reverse("account:api-v1:password-reset")
@@ -335,19 +335,19 @@ class TestAccountAPI:
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    # def test_account_password_reset_confirm(self, api_client: APIClient, user: User):
-    #     token = JWTTOKEN.make_token(user)
-    #     url = reverse("account:api-v1:password-reset-confirm", kwargs={"token": token})
-    #     data = {
-    #         "new_password": "newpassword123",
-    #         "new_password_confirm": "newpassword123",
-    #     }
-    #     response = api_client.post(url, data)
+    def test_account_password_reset_confirm(self, api_client: APIClient, user: User):
+        token = JWTTOKEN.make_token(user)
+        url = reverse("account:api-v1:password-reset-confirm", kwargs={"token": token})
+        data = {
+            "new_password": "newpassword123",
+            "new_password_confirm": "newpassword123",
+        }
+        response = api_client.post(url, data)
 
-    #     assert response.status_code == status.HTTP_200_OK
-    #     assert response.data["detail"] == "Password reset successfully."
-    #     user.refresh_from_db()
-    #     assert user.check_password("newpassword123") is True
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["detail"] == "Password reset successfully."
+        user.refresh_from_db()
+        assert user.check_password("newpassword123") is True
 
     def test_account_password_reset_confirm_invalid_token(self, api_client: APIClient, user: User):
         url = reverse("account:api-v1:password-reset-confirm", kwargs={"token": "token"})
