@@ -6,6 +6,7 @@ django-recaptcha
 python-jose[cryptography]
 psycopg2-binary
 gunicorn
+django-cors-headers
 
 # API
 djangorestframework
