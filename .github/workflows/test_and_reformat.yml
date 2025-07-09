@@ -15,13 +15,13 @@ jobs:
           uses: actions/checkout@v4
           
         - name: Copy .env.sample
-          run: cp env/prod/.env.sample env/prod/.env
+          run: cp env/dev/.env.sample env/dev/.env
 
         - name: Setup docker compose
-          run: docker compose -f docker-compose-prod.yml up -d
+          run: docker compose -f docker-compose-dev.yml up -d
 
         - name: Reformat and flake8 check
-          run: docker compose -f docker-compose-prod.yml exec backend sh -c "black --line-length 120 . && flake8 ."
+          run: docker compose -f docker-compose-dev.yml exec backend sh -c "black --line-length 120 . && flake8 ."
 
   Test:
     runs-on: ubuntu-latest
@@ -33,10 +33,10 @@ jobs:
           uses: actions/checkout@v4
           
         - name: Copy .env.sample
-          run: cp env/prod/.env.sample env/prod/.env
+          run: cp env/dev/.env.sample env/dev/.env
 
         - name: Setup docker compose
-          run: docker compose -f docker-compose-prod.yml up -d
+          run: docker compose -f docker-compose-dev.yml up -d
         
         - name: Run tests
-          run: docker compose -f docker-compose-prod.yml exec backend sh -c "pytest ."        
+          run: docker compose -f docker-compose-dev.yml exec backend sh -c "pytest ."        
