@@ -3,8 +3,6 @@ name: Django Project Test, Reformat and Deploy
 on:
   push:
       branches: ["main"]
-  pull_request:
-      branches: ["main"]
 
 jobs:
   Reformat_AND_Test:
