@@ -112,16 +112,12 @@ class CustomLoginForm(CaptchaForm, forms.Form):
         #         code="captcha_invalid",
         #     )
         if not email or not password:
-            raise forms.ValidationError(
-                "Please enter a correct email and password. Note that both fields may be case-sensitive."
-            )
+            raise forms.ValidationError("Please enter a correct email and password. Note that both fields may be case-sensitive.")
 
         self.user_cache = authenticate(self.request, email=email, password=password)
 
         if self.user_cache is None:
-            raise forms.ValidationError(
-                "Please enter a correct email and password. Note that both fields may be case-sensitive."
-            )
+            raise forms.ValidationError("Please enter a correct email and password. Note that both fields may be case-sensitive.")
 
         if not self.user_cache.is_active:
             raise forms.ValidationError("This account is inactive.")
@@ -185,10 +181,13 @@ class UserInfoForm(forms.ModelForm):
 
         cropped_data = self.cleaned_data.get("cropped_image_data")
         if cropped_data:
-            format, imgstr = cropped_data.split(";base64,")
-            ext = format.split("/")[-1]
-            image_file = ContentFile(base64.b64decode(imgstr), name=f"user_{instance.pk}.{ext}")
-            instance.image = image_file
+            try:
+                format, imgstr = cropped_data.split(";base64,")
+                ext = format.split("/")[-1]
+                image_file = ContentFile(base64.b64decode(imgstr), name=f"user_{instance.pk}.{ext}")
+                instance.image = image_file
+            except ValueError:
+                pass
 
         if commit:
             instance.save()
