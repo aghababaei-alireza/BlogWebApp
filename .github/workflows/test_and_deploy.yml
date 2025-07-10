@@ -1,4 +1,4 @@
-name: Django Project Test and Reformat
+name: Django Project Test, Reformat and Deploy
 
 on:
   push:
@@ -43,7 +43,7 @@ jobs:
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     steps:
       - name: Connect to server
-        uses: appleboy/ssh-action
+        uses: appleboy/ssh-action@v1
         with: 
           host: ${{ secrets.DEPLOY_HOST }}
           port: ${{ secrets.DEPLOY_PORT }}
