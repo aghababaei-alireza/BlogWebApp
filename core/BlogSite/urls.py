@@ -56,6 +56,7 @@ urlpatterns = [
         name="schema-redoc",
     ),
     path("captcha/", include("captcha.urls")),
+    path("favicon.ico", RedirectView.as_view(url=settings.STATIC_URL + "img/favicon.ico", permanent=True)),
 ]
 
 if settings.DEBUG:
