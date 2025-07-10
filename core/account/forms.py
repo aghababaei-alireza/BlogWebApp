@@ -186,7 +186,7 @@ class UserInfoForm(forms.ModelForm):
                 ext = format.split("/")[-1]
                 image_file = ContentFile(base64.b64decode(imgstr), name=f"user_{instance.pk}.{ext}")
                 instance.image = image_file
-            except:
+            except ValueError:
                 pass
 
         if commit:
