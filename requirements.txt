@@ -29,6 +29,6 @@ drf_yasg[validation]
 setuptools
 
 # Background process and caching
-celery[redis]
+celery[redis]>=5.5
 redis
 django-redis
